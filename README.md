@@ -114,6 +114,19 @@ The fundamental architectural principle of this project is the **strict separati
 
 ## 5. System Architecture
 
+### 🎬 Live Animated Architecture & Real-Time Traffic Flow
+
+The following dynamic motion graphic visualizes the concurrent flows across the platform:
+- 🟢 **Automated DevSecOps CI/CD**: Developer code push ➔ Jenkins pipeline ➔ SonarQube & Trivy scan ➔ Amazon ECR ➔ Amazon EKS rolling deployment.
+- 🔵 **Client Ingress Traffic**: Internet requests entering through AWS ELB to React SPA & Nginx in-pod proxy.
+- 🟣 **In-Cluster Microservice Routing**: Reverse proxy forwarding `/backend/` calls internally to the Node.js/Express service.
+- 🟠 **DNS Alias Resolution**: CoreDNS resolving `database` via Kubernetes `ExternalName` directly to the external AWS RDS MySQL endpoint.
+- 🟡 **Persistence & Data Return**: MySQL query execution on AWS RDS and response delivery back to the client browser.
+
+![Live Architecture Traffic Flow Animation](assets/architecture-animation.gif)
+
+---
+
 ### 🌐 End-to-End DevOps CI/CD & AWS Cloud Infrastructure Architecture
 
 The following diagram illustrates the complete production topology: Developer push ➔ Jenkins CI/CD Pipeline (OWASP, SonarQube, Trivy) ➔ Amazon ECR ➔ AWS VPC (Public & Private Subnets) ➔ Amazon EKS Cluster ➔ ExternalName Service ➔ Amazon RDS MySQL, plus Prometheus & Grafana Observability:
