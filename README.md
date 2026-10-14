@@ -114,7 +114,15 @@ The fundamental architectural principle of this project is the **strict separati
 
 ## 5. System Architecture
 
-The following diagram illustrates the complete infrastructure topology, network boundaries, and component interactions:
+### 🌐 End-to-End DevOps CI/CD & AWS Cloud Infrastructure Architecture
+
+The following diagram illustrates the complete production topology: Developer push ➔ Jenkins CI/CD Pipeline (OWASP, SonarQube, Trivy) ➔ Amazon ECR ➔ AWS VPC (Public & Private Subnets) ➔ Amazon EKS Cluster ➔ ExternalName Service ➔ Amazon RDS MySQL, plus Prometheus & Grafana Observability:
+
+![End-to-End DevOps CI/CD Architecture](assets/cicd-cloud-architecture.png)
+
+---
+
+### ☸️ In-Cluster Workload Topology
 
 ![System Architecture](assets/architecture-diagram.png)
 
