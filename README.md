@@ -816,8 +816,8 @@ The following architectural enhancements represent the planned roadmap for evolv
 **Someswara Rao Tarra**  
 *Senior DevOps & Cloud Infrastructure Engineer*
 
-- **LinkedIn**: [linkedin.com/in/someshtarra](https://www.linkedin.com/)
-- **GitHub**: [@someshtarra](https://github.com/)
+- **LinkedIn**: [linkedin.com/in/someshtarra](https://www.linkedin.com/in/someshtarra)
+- **GitHub**: [github.com/someshtarra](https://github.com/someshtarra)
 - **Email**: someswararaotarra@gmail.com
 
 ---
