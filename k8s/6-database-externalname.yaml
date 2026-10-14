@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: database
+  labels:
+    app: database
+spec:
+  type: ExternalName
+  # Replace with your external database FQDN (e.g., AWS RDS, Azure Database for MySQL, or cloud DB host)
+  externalName: mydb.example.com
