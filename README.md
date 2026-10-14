@@ -26,6 +26,10 @@
 > - **Live REST API Endpoint**: [http://a2e8054e02759442eb1369bcbb8201ab-1857416283.us-east-1.elb.amazonaws.com/backend/books](http://a2e8054e02759442eb1369bcbb8201ab-1857416283.us-east-1.elb.amazonaws.com/backend/books)
 > - **Live Cloud Architecture**: Amazon EKS (v1.34) on x86_64 EC2 nodes + Amazon RDS for MySQL + AWS Elastic Load Balancer (ELB).
 
+<p align="center">
+  <img src="assets/live-application-ui.png" alt="Live Application Running on AWS EKS" width="850">
+</p>
+
 ---
 
 </div>
@@ -626,6 +630,12 @@ kubectl apply -f k8s/
 ## 16. Live Production Results & Real-World Validation (AWS EKS + RDS)
 
 This deployment was validated and tested live on **Amazon Elastic Kubernetes Service (AWS EKS)** connected to **Amazon RDS MySQL**. Below are the verified cluster outputs and live network responses.
+
+### 📱 Live Application UI (Rendered from AWS RDS MySQL via AWS ELB)
+
+The following screenshot confirms the live, deployed web application running through the AWS Elastic Load Balancer endpoint in Safari, rendering the book catalog streamed from the external AWS RDS MySQL instance:
+
+![Live Application UI](assets/live-application-ui.png)
 
 ---
 
