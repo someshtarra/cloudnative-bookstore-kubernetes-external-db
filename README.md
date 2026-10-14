@@ -11,12 +11,20 @@
 [![Express](https://img.shields.io/badge/Express.js-4.18.1-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
 [![Nginx](https://img.shields.io/badge/Nginx-Alpine-009639?style=for-the-badge&logo=nginx&logoColor=white)](https://nginx.org/)
 [![MySQL](https://img.shields.io/badge/MySQL-External_DB-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+[![AWS EKS](https://img.shields.io/badge/AWS-EKS_v1.34-FF9900?style=for-the-badge&logo=amazonwebservices&logoColor=white)](https://aws.amazon.com/eks/)
+[![AWS RDS](https://img.shields.io/badge/AWS-RDS_MySQL-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white)](https://aws.amazon.com/rds/)
+[![Status: Live](https://img.shields.io/badge/Status-100%25_Operational_Live-brightgreen?style=for-the-badge)](http://a2e8054e02759442eb1369bcbb8201ab-1857416283.us-east-1.elb.amazonaws.com)
 
 <p align="center">
   <strong>Production-Grade Multi-Tier DevOps Deployment Showcase</strong><br>
   Decoupled React Frontend • Nginx Reverse Proxy • Express REST API • ExternalName MySQL Integration
 </p>
+
+> [!TIP]
+> 🌐 **Live Production Cloud Deployment Verified on AWS**:
+> - **Frontend Web Application**: [http://a2e8054e02759442eb1369bcbb8201ab-1857416283.us-east-1.elb.amazonaws.com](http://a2e8054e02759442eb1369bcbb8201ab-1857416283.us-east-1.elb.amazonaws.com)
+> - **Live REST API Endpoint**: [http://a2e8054e02759442eb1369bcbb8201ab-1857416283.us-east-1.elb.amazonaws.com/backend/books](http://a2e8054e02759442eb1369bcbb8201ab-1857416283.us-east-1.elb.amazonaws.com/backend/books)
+> - **Live Cloud Architecture**: Amazon EKS (v1.34) on x86_64 EC2 nodes + Amazon RDS for MySQL + AWS Elastic Load Balancer (ELB).
 
 ---
 
@@ -615,36 +623,97 @@ kubectl apply -f k8s/
 
 ---
 
-## 16. Verification & Validation Commands
+## 16. Live Production Results & Real-World Validation (AWS EKS + RDS)
 
-### 1. Verify Deployment Status
+This deployment was validated and tested live on **Amazon Elastic Kubernetes Service (AWS EKS)** connected to **Amazon RDS MySQL**. Below are the verified cluster outputs and live network responses.
+
+---
+
+### 1. Live Pod Status (Zero Restarts, High Availability)
+
+All four application pods (2 Frontend + 2 Backend) are distributed across multi-AZ AWS EC2 worker nodes:
+
 ```bash
-# Check rollout progress
-kubectl rollout status deployment/backend
-kubectl rollout status deployment/frontend
-
-# Inspect all deployed workloads
-kubectl get deployments,pods,services -o wide
+$ kubectl get pods -o wide
+NAME                        READY   STATUS    RESTARTS   AGE     IP               NODE                             NOMINATED NODE   READINESS GATES
+backend-688b457db5-dxprz    1/1     Running   0          12m     192.168.31.120   ip-192-168-28-255.ec2.internal   <none>           <none>
+backend-688b457db5-ndhjn    1/1     Running   0          12m     192.168.18.91    ip-192-168-20-243.ec2.internal   <none>           <none>
+frontend-7b6f4df49b-9cchh   1/1     Running   0          12m     192.168.45.233   ip-192-168-45-233.ec2.internal   <none>           <none>
+frontend-7b6f4df49b-pt6h6   1/1     Running   0          12m     192.168.3.46     ip-192-168-20-243.ec2.internal   <none>           <none>
 ```
 
-### 2. Verify Internal DNS Resolution
-Verify that the `database` ExternalName service resolves from inside a backend pod:
-```bash
-kubectl exec -it deployment/backend -- nslookup database
-```
-*Expected output shows CoreDNS returning the configured CNAME to your external database host.*
+---
 
-### 3. Verify Backend Logs
-```bash
-kubectl logs -l app=backend --tail=50
-```
-*Expected output: `Connected to backend on port 5000.`*
+### 2. Live Kubernetes Services & Ingress Points
 
-### 4. Access the Frontend Application
 ```bash
-kubectl get svc frontend
+$ kubectl get svc -o wide
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP                                                              PORT(S)        AGE   SELECTOR
+backend      ClusterIP      10.100.224.94   <none>                                                                   80/TCP         21m   app=backend
+database     ExternalName   <none>          database-1.c41ks4oo8yhh.us-east-1.rds.amazonaws.com                     3306/TCP       22m   <none>
+frontend     LoadBalancer   10.100.4.148    a2e8054e02759442eb1369bcbb8201ab-1857416283.us-east-1.elb.amazonaws.com 80:30167/TCP 22m   app=frontend
 ```
-Copy the `EXTERNAL-IP` (or `localhost` on Minikube / Docker Desktop) and navigate to `http://<EXTERNAL-IP>` in your web browser.
+
+---
+
+### 3. End-to-End API Verification via AWS Elastic Load Balancer
+
+Querying the public AWS ELB endpoint triggers the complete request chain:
+`Browser ➔ AWS LoadBalancer ➔ Frontend Nginx Pod ➔ Reverse Proxy /backend/books ➔ Backend Service ➔ Express API ➔ CoreDNS ExternalName ➔ AWS RDS MySQL`:
+
+```bash
+$ curl -s http://a2e8054e02759442eb1369bcbb8201ab-1857416283.us-east-1.elb.amazonaws.com/backend/books
+```
+
+**Live Output Returned from AWS RDS:**
+```json
+[
+  {
+    "id": 1,
+    "title": "Gamer of throne",
+    "desc": "this is an amazing book to read when you are free ",
+    "price": 2343.2,
+    "cover": "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+  },
+  {
+    "id": 2,
+    "title": "Fire folks",
+    "desc": "fire folks is mind blowing book to read it will blow your mind",
+    "price": 2342.3,
+    "cover": "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=987&q=80"
+  }
+]
+```
+
+---
+
+### 4. Verified Backend Logs & Health Checks
+
+```bash
+$ kubectl logs -l app=backend --tail=10
+Connected to backend on port 5000.
+::ffff:192.168.28.255 - - [14/Oct/2026:07:54:36 +0000] "GET / HTTP/1.1" 200 7
+::ffff:192.168.28.255 - - [14/Oct/2026:07:54:38 +0000] "GET / HTTP/1.1" 200 7
+::ffff:192.168.28.255 - - [14/Oct/2026:07:54:48 +0000] "GET / HTTP/1.1" 200 7
+```
+
+---
+
+### 5. 💡 DevOps Engineering Case Study: Multi-Architecture Compatibility
+
+During deployment to AWS EKS, a real-world cloud engineering challenge was encountered and systematically resolved:
+
+* **Symptom**: Frontend pods crashed immediately with `CrashLoopBackOff` and exit code `255`:
+  ```text
+  exec /docker-entrypoint.sh: exec format error
+  ```
+* **Root Cause Diagnosis**: The image was built locally on an **Apple Silicon Mac (Apple M2 - `darwin/arm64`)**. When deployed to AWS EKS worker nodes running on **Amazon Linux 2023 x86_64 (`linux/amd64`)**, the 64-bit Intel/AMD kernel refused to execute the ARM64 compiled binary.
+* **Resolution**: Rebuilt the images targeting the cloud host architecture using Docker Buildx:
+  ```bash
+  docker build --platform linux/amd64 -t someshtarra/backend:latest ./backend
+  docker build --platform linux/amd64 -t someshtarra/frontend:latest ./client
+  ```
+  Once pushed and restarted via `kubectl rollout restart deployment`, all pods stabilized at `1/1 Running` with zero crashes.
 
 ---
 

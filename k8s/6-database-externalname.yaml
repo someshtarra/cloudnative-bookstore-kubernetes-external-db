@@ -7,4 +7,4 @@ metadata:
 spec:
   type: ExternalName
   # Replace with your external database FQDN (e.g., AWS RDS, Azure Database for MySQL, or cloud DB host)
-  externalName: mydb.example.com
+  externalName: database-1.c41ks4oo8yhh.us-east-1.rds.amazonaws.com
